@@ -48,7 +48,6 @@ public class Main {
                 if(check!=-1)
                 {
                     System.out.println("UserId Already Exist..");
-                    return;
                 }
                 else {
                     System.out.println("Enter the Name:");
@@ -86,13 +85,64 @@ public class Main {
                         choice = sc.nextInt();
                         sc.nextLine();
                         if (choice == 1) {
-
+                           System.out.println(users.get(userindx).toString());
 
                         } else if (choice == 2) {
+                            System.out.println(users.get(userindx).getBalance());
 
                         } else if (choice == 3) {
+                            String receiverId;
+                            double amount;
+                            System.out.println("Enter the Receivers UserId:");
+                            receiverId= sc.nextLine();
+                            int recId=finduserindex(users,receiverId);
+                            if(recId==-1)
+                            {
+                                System.out.println("UserId not Found..");
+
+                            }
+                            else {
+
+                                System.out.println("Enter amount to send:");
+                                amount=sc.nextInt();
+                                sc.nextLine();
+                                if (amount>users.get(userindx).getBalance())
+                                {
+                                    System.out.println("Insufficient Balance!!");
+                                }
+                                else
+                                {
+                                    String tid="TXN"+(transactions.size()+1);
+                                    String method;
+                                    String senderId=users.get(userindx).getUserId();
+                                    System.out.println("enter the payemnt type:");
+                                    method=sc.nextLine();
+                                    users.get(userindx).deductBalance(amount);
+                                    users.get(recId).addBalance(amount);
+                                    System.out.println("Transaction Successfull ");
+                                    Transactions newtransaction=new Transactions(tid,senderId,receiverId,method,amount);
+                                    transactions.add(newtransaction);
+                                    System.out.println(newtransaction);
+                                }
+
+                            }
 
                         } else if (choice == 4) {
+                            String currentuserId = users.get(userindx).getUserId();
+                            boolean found=false;
+                            for (int i=0;i<transactions.size();i++) {
+                                Transactions t=transactions.get(i);
+                                if (t.getSenderId().equals(currentuserId)||t.getReceiverId().equals(currentuserId)) {
+                                    System.out.println(t);
+
+                                   found=true;
+                                }
+
+                            }
+                            if (!found)
+                            {
+                                System.out.println("no transactions found!..");
+                            }
 
                         } else if (choice == 5) {
                             System.out.println("Loggingout....");
