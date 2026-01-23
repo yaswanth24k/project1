@@ -45,10 +45,10 @@ public class User {
     }
     public void addBalance(double amount)
     {
-         if(amount>0)
-         {
-             balance=balance+amount;
-         }
+        if(amount>0)
+        {
+            balance=balance+amount;
+        }
     }
 
     @Override

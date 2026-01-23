@@ -6,18 +6,6 @@ import java.util.Scanner;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
 
-   public static int finduserindex(List<User> users,String userId)
-    {
-        for(int i=0;i<users.size();i++)
-        {
-            if(users.get(i).getUserId().equals(userId))
-            {
-                return i;
-            }
-        }
-        return -1;
-    }
-
 
     public static void main(String[] args) {
         List<User> users=new ArrayList<>();
@@ -44,8 +32,8 @@ public class Main {
                 double balance;
                 System.out.println("Enter the UserId:");
                 userId= sc.nextLine();
-                int check=finduserindex(users,userId);
-                if(check!=-1)
+                boolean check=Userservice.finduserexist(users,userId);
+                if(check)
                 {
                     System.out.println("UserId Already Exist..");
                 }
@@ -71,7 +59,7 @@ public class Main {
                 String userId;
                 System.out.println("Enter the UserId:");
                 userId= sc.nextLine();
-               userindx= finduserindex(users,userId);
+               userindx=Userservice.finduserindex(users,userId);
                 if (userindx!=-1) {
 
                     System.out.println("signin succesfull");
@@ -93,9 +81,10 @@ public class Main {
                         } else if (choice == 3) {
                             String receiverId;
                             double amount;
+                            int recId=-1;
                             System.out.println("Enter the Receivers UserId:");
                             receiverId= sc.nextLine();
-                            int recId=finduserindex(users,receiverId);
+                            recId=Userservice.finduserindex(users,receiverId);
                             if(recId==-1)
                             {
                                 System.out.println("UserId not Found..");
@@ -106,7 +95,7 @@ public class Main {
                                 System.out.println("Enter amount to send:");
                                 amount=sc.nextInt();
                                 sc.nextLine();
-                                if (amount>users.get(userindx).getBalance())
+                                if (Userservice.isvalidtransaction(amount,users,userindx))
                                 {
                                     System.out.println("Insufficient Balance!!");
                                 }
@@ -129,19 +118,18 @@ public class Main {
 
                         } else if (choice == 4) {
                             String currentuserId = users.get(userindx).getUserId();
-                            boolean found=false;
-                            for (int i=0;i<transactions.size();i++) {
-                                Transactions t=transactions.get(i);
-                                if (t.getSenderId().equals(currentuserId)||t.getReceiverId().equals(currentuserId)) {
-                                    System.out.println(t);
+                            List<Transactions> history=Userservice.gettransactionhistory(transactions,currentuserId);
 
-                                   found=true;
-                                }
-
-                            }
-                            if (!found)
+                            if (history.isEmpty())
                             {
-                                System.out.println("no transactions found!..");
+                                System.out.println("no transactions found");
+                            }
+                            else
+                            {
+                                for (Transactions t:history)
+                                {
+                                    System.out.println(t);
+                                }
                             }
 
                         } else if (choice == 5) {
