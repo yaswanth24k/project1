@@ -48,8 +48,11 @@ public class Main {
                     balance = sc.nextDouble();
                     sc.nextLine();
 
-                    User newuser = new User(userId, name, emailId, phoneNumber, balance);
-                    users.add(newuser);
+//                    User newuser = new User(userId, name, emailId, phoneNumber, balance);
+//                    users.add(newuser);
+                    Daouser saveuser= new Daouser();
+                   User newuser=new User(userId,name,emailId,phoneNumber,balance);
+                   saveuser.saveuser(newuser);
                     System.out.println("Signup successfull");
                 }
 
